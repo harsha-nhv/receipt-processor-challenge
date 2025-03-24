@@ -172,3 +172,103 @@ the reviewing engineer.
 ### How long do I have to complete the exercise?
 There is no time limit for the exercise. Out of respect for your time, we designed this exercise with the intent that it should take you a few hours. But, please
 take as much time as you need to complete the work.
+
+---
+
+# Receipt Processor - Flask API
+
+## Overview
+This is a Flask-based API for processing receipts and calculating points based on receipt details. The API allows users to submit receipt data and retrieve point calculations. The project is Dockerized to ensure a consistent environment for development and testing.
+
+## Features
+- Process receipts and assign unique IDs
+- Retrieve points for a specific receipt
+- Flask application with RESTful API endpoints
+- Dockerized setup for easy deployment and testing
+- Unit tests using `pytest`
+
+## Prerequisites
+Ensure you have the following installed:
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Installation & Setup
+
+### 1. Clone the Repository
+```sh
+git clone https://github.com/your-repo/receipt-processor.git
+cd receipt-processor
+```
+
+### 2. Install Dependencies Using Docker
+The `requirements.txt` contains all necessary dependencies.
+```
+Flask
+pydantic
+pytest
+```
+Install the dependencies inside a Docker container by running:
+```sh
+docker run --rm -v $(pwd):/app -w /app python:3.9 pip install -r requirements.txt
+```
+
+### 3. Build the Docker Image
+```sh
+docker-compose build
+```
+
+### 4. Run the Flask Application
+```sh
+docker-compose up flask-app
+```
+The application should now be accessible at `http://localhost:5000`.
+
+## API Endpoints
+
+### **1. Process a Receipt**
+- **Endpoint:** `POST /receipts/process`
+- **Request Body (JSON):**
+```json
+{
+  "retailer": "Best Buy",
+  "purchaseDate": "2023-03-22",
+  "purchaseTime": "14:33",
+  "items": [{ "shortDescription": "Laptop", "price": "999.99" }],
+  "total": "999.99"
+}
+```
+- **Response:**
+```json
+{
+  "id": "receipt-0"
+}
+```
+
+### **2. Get Receipt Points**
+- **Endpoint:** `GET /receipts/{id}/points`
+- **Example Request:**
+```sh
+curl http://localhost:5000/receipts/receipt-0/points
+```
+- **Response:**
+```json
+{
+  "points": 50
+}
+```
+
+## Running Tests & Automated Evaluation
+To execute unit tests inside the Docker container:
+```sh
+docker-compose up test-runner
+```
+Or, to run tests interactively:
+```sh
+docker-compose run test-runner pytest -v
+```
+
+## Stopping the Application
+To stop and remove all containers:
+```sh
+docker-compose down
+```
